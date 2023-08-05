@@ -1,39 +1,39 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>알림창</title>
-</head>
-<style>
-    .alert-box {
-        width: 100px;
-        height: auto;
-        background-color: blueviolet;
-        padding: 20px;
-        border-radius: 5px;
-        color: white;
-        text-align: center;
-        display: none;
+  <style>
+    /* 박스의 초기 상태는 숨겨진 상태로 설정 */
+    #box {
+      display: none;
+      width: 100px;
+      height: 100px;
+      background-color: red;
     }
-</style>
+  </style>
+</head>
 <body>
-    <div class="alert-box" id="alert">
-        <p>Alert 박스</p>
-        <button onclick="close()">닫기</button>
-    </div>
-    <button onclick="open()">버튼</button>
-    <script>
-        function open(구멍) {
-            document.getElementById('alert').style.display = 구멍;
-        }
+  <button id="toggleButton">버튼</button>
+  <div id="box"></div>
 
-        알림창열기(구멍);
+  <script>
+    // 버튼을 클릭할 때마다 박스를 토글하여 보이거나 숨기는 함수
+    function toggleBox() {
+      var box = document.getElementById('box');
+      var button = document.getElementById('toggleButton');
 
-        function close() {
-            document.getElementById('alert').style.display = 'none';
-        }
-    </script>
+      // 박스의 현재 상태를 확인하고 토글
+      if (box.style.display === 'none') {
+        box.style.display = 'block';
+        button.innerText = '버튼 없애기';
+      } else {
+        box.style.display = 'none';
+        button.innerText = '박스 보이기';
+      }
+    }
+
+    // 버튼 클릭 이벤트에 toggleBox 함수 연결
+    var button = document.getElementById('toggleButton');
+    button.addEventListener('click', toggleBox);
+  </script>
 </body>
 </html>

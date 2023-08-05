@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Example</title>
+</head>
+<body>
+    <button id="open_close">Toggle Alert</button>
+    <div id="title"></div>
+    <div id="alert" style="display: none;">This is an alert!</div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            function noti() {
+                $('#title').html();
+                $('#alert').css('display', 'block');
+            }
+
+            function toggleAlertDisplay() {
+                var alertElement = $('#alert');
+                if (alertElement.css('display') === 'none') {
+                    alertElement.css('display', 'block');
+                } else {
+                    alertElement.css('display', 'none');
+                }
+            }
+
+            $('#open_close').click(toggleAlertDisplay);
+        });
+    </script>
+</body>
+</html>
