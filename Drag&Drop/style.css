@@ -1,0 +1,43 @@
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.container{
+  width: 100%;
+  min-height: 100vh;
+  background: #0b0423;
+  display: flex;
+  align-content: center;
+  justify-content: center;
+}
+
+#left, #right {
+  width: 300px;
+  min-height: 400px;
+  margin: 20px;
+  border: 2px dashed white;
+}
+
+.list {
+  background-color: wheat;
+  height: 60px;
+  margin: 30px;
+  display: flex;
+  align-items: center;
+  cursor: grab;
+}
+
+.list {
+  background-color: wheat;
+  height: 60px;
+  margin: 30px;
+  display: flex;
+  align-items: center;
+  cursor: grab;
+}
+
+.list .material-symbols-outlined {
+  margin: 10px;
+}
