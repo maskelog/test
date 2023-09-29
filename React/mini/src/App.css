@@ -1,34 +1,43 @@
-.app {
-  font-family: Arial, sans-serif;
+.App {
+  font-family: 'Arial', sans-serif;
+  text-align: center;
   padding: 20px;
 }
 
 .event-list {
   display: flex;
   flex-wrap: wrap;
-  gap: 20px;
+  justify-content: center;
 }
 
 .event-item {
-  flex: 0 0 calc(33.33% - 20px);
-  background-color: #f7f7f7;
+  border: 1px solid #ccc;
   padding: 10px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  border-radius: 5px;
+  margin: 10px;
+  width: 300px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s;
 }
 
-.event-item h2 {
-  font-size: 18px;
-  margin-top: 0;
+.event-item:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.event-item img {
+  max-width: 100%;
+  height: auto;
 }
 
 .event-item a {
-  color: #007BFF;
-  text-decoration: none;
   display: inline-block;
   margin-top: 10px;
+  padding: 5px 15px;
+  background-color: #007BFF;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
 }
 
 .event-item a:hover {
-  text-decoration: underline;
+  background-color: #0056b3;
 }
