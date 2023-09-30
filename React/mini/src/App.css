@@ -1,43 +1,24 @@
 .App {
   font-family: 'Arial', sans-serif;
   text-align: center;
-  padding: 20px;
+  padding: 2rem;
 }
 
-.event-list {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.event-item {
-  border: 1px solid #ccc;
-  padding: 10px;
-  margin: 10px;
-  width: 300px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  transition: box-shadow 0.3s;
-}
-
-.event-item:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-}
-
-.event-item img {
-  max-width: 100%;
-  height: auto;
-}
-
-.event-item a {
-  display: inline-block;
-  margin-top: 10px;
-  padding: 5px 15px;
+button {
+  margin: 1rem;
+  padding: 0.5rem 1rem;
   background-color: #007BFF;
   color: white;
-  text-decoration: none;
-  border-radius: 5px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
 }
 
-.event-item a:hover {
+button:hover {
   background-color: #0056b3;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
 }

@@ -1,67 +1,65 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import xml2js from 'xml-js';
-import './App.css';
-
-const API_ENDPOINT = 'http://api.kcisa.kr/openapi/CNV_060/request';
-const SERVICE_KEY = 'a5b5baa6-6bdf-4021-9e60-5a6282983678';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <h1>문화예술공연 목록</h1>
-      </header>
-      <EventList />
-    </div>
-  );
-}
+  const [boxOffice, setBoxOffice] = useState([]);
+  const [searchDate, setSearchDate] = useState('');
+  const [showRange, setShowRange] = useState('');
 
-function EventList() {
-  const [events, setEvents] = useState([]);
-  const [error, setError] = useState(null);
 
   useEffect(() => {
-    async function fetchData() {
-      try {
-        const response = await axios.get(API_ENDPOINT, {
-          params: {
-            serviceKey: SERVICE_KEY,
-            numOfRows: 10,
-            pageNo: 1
-          }
-        });
-        
-        const jsonData = xml2js.xml2js(response.data, { compact: true });
-        const eventsData = jsonData.root.item; // 이 부분은 실제 XML 구조에 따라 수정해야 합니다.
-        
-        setEvents(eventsData);
-      } catch (error) {
-        setError(error);
-      }
-    }
-    fetchData();
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    const formattedDate = `${yesterday.getFullYear()}${(yesterday.getMonth() + 1).toString().padStart(2, '0')}${yesterday.getDate().toString().padStart(2, '0')}`;
+    
+    fetchBoxOfficeData(formattedDate);
   }, []);
 
-  if (error) {
-    return <div>오류가 발생했습니다: {error.message}</div>;
-  }
+  const handleSearch = () => {
+    fetchBoxOfficeData(searchDate);
+  };
+
+  const fetchBoxOfficeData = (date) => {
+    const formattedDate = date.split('-').join('');
+    
+    const API_KEY = 'f5eef3421c602c6cb7ea224104795888';
+    const URL = `http://www.kobis.or.kr/kobisopenapi/webservice/rest/boxoffice/searchDailyBoxOfficeList.json?key=${API_KEY}&targetDt=${formattedDate}`;
+    
+    axios.get(URL)
+    .then(response => {
+      setBoxOffice(response.data.boxOfficeResult.dailyBoxOfficeList);
+      setShowRange(date); // 조회일자를 showRange에 설정
+    })
+    .catch(error => {
+      console.error("Error fetching data:", error);
+    });
+  
+  };
 
   return (
-    <div>
-      {events.map((event, index) => (
-        <div key={index}>
-          <h2>{event.title._text}</h2>
-          <p>기간: {event.period._text}</p>
-          <p>시간: {event.eventPeriod._text}</p>
-          <p>장소: {event.eventSite._text}</p>
-          <p>금액: {event.charge._text}</p>
-          <p>문의안내: {event.contactPoint._text}</p>
-          <p>설명: {event.description._text}</p>
-          <a href={event.url._text} target="_blank" rel="noreferrer">자세히 보기</a>
-          <img src={event.imageObject._text} alt={event.title._text} />
-        </div>
-      ))}
+    <div className="App">
+      <h1>Box Office</h1>
+      <h2>조회일자: {showRange}</h2>
+      
+      <div className="search-box">
+        <input
+          type="date"
+          value={searchDate}
+          onChange={e => setSearchDate(e.target.value)}
+        />
+        <button onClick={handleSearch}>Search</button>
+      </div>
+
+      <ul>
+        {boxOffice.map(movie => (
+          <li key={movie.movieCd}>
+            <h3>{movie.movieNm}</h3>
+            <p>순위: {movie.rank}</p>
+            <p>개봉일: {movie.openDt}</p>
+            <p>누적관람객: {movie.audiAcc}명</p>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
