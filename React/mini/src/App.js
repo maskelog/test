@@ -22,13 +22,13 @@ function App() {
   const fetchBoxOfficeData = (date) => {
     const formattedDate = date.split('-').join('');
     
-    const API_KEY = 'f5eef3421c602c6cb7ea224104795888';
+    const API_KEY = process.env.REACT_APP_KOBIS_API_KEY;
     const URL = `http://www.kobis.or.kr/kobisopenapi/webservice/rest/boxoffice/searchDailyBoxOfficeList.json?key=${API_KEY}&targetDt=${formattedDate}`;
     
     axios.get(URL)
     .then(response => {
       setBoxOffice(response.data.boxOfficeResult.dailyBoxOfficeList);
-      setShowRange(date); // 조회일자를 showRange에 설정
+      setShowRange(date);
     })
     .catch(error => {
       console.error("Error fetching data:", error);
