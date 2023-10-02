@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import './App.css'
 
 function App() {
   const [boxOffice, setBoxOffice] = useState([]);
@@ -38,7 +39,7 @@ function App() {
 
   return (
     <div className="App">
-      <h1>Box Office</h1>
+      <h1>어제자 박스오피스 순위</h1>
       <h2>조회일자: {showRange}</h2>
       
       <div className="search-box">
