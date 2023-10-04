@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import './App.css'
+import './App.css';
+import MovieList from './MovieList';
 
 function App() {
   const [boxOffice, setBoxOffice] = useState([]);
   const [searchDate, setSearchDate] = useState('');
   const [showRange, setShowRange] = useState('');
-
 
   useEffect(() => {
     const yesterday = new Date();
@@ -20,21 +20,47 @@ function App() {
     fetchBoxOfficeData(searchDate);
   };
 
-  const fetchBoxOfficeData = (date) => {
+  const fetchBoxOfficeData = async (date) => {
     const formattedDate = date.split('-').join('');
     
-    const API_KEY = process.env.REACT_APP_KOBIS_API_KEY;
-    const URL = `http://www.kobis.or.kr/kobisopenapi/webservice/rest/boxoffice/searchDailyBoxOfficeList.json?key=${API_KEY}&targetDt=${formattedDate}`;
+    const KOBIS_API_KEY = process.env.REACT_APP_KOBIS_API_KEY;
+    const KOREAFILM_API_KEY = process.env.REACT_APP_KOREAFILM_API_KEY;
     
-    axios.get(URL)
-    .then(response => {
-      setBoxOffice(response.data.boxOfficeResult.dailyBoxOfficeList);
+    const KOBIS_URL = `http://www.kobis.or.kr/kobisopenapi/webservice/rest/boxoffice/searchDailyBoxOfficeList.json?key=${KOBIS_API_KEY}&targetDt=${formattedDate}`;
+    
+    try {
+      const response = await axios.get(KOBIS_URL);
+      const movies = response.data?.boxOfficeResult?.dailyBoxOfficeList || [];
+
+      if (movies.length === 0) {
+        console.warn("No movies returned from KOBIS API.");
+        setBoxOffice([]);
+        return;
+      }
+
+      const moviePosters = await Promise.all(movies.map(async movie => {
+        const QUERY_URL = `http://api.koreafilm.or.kr/openapi-data2/wisenut/search_api/search_json2.jsp?collection=kmdb_new2&ServiceKey=${KOREAFILM_API_KEY}&detail=Y&query=${encodeURIComponent(movie.movieNm)}`;
+        const posterResponse = await axios.get(QUERY_URL);
+        console.log(`Response data for ${movie.movieNm}:`, posterResponse.data);
+        const posters = posterResponse.data?.Data?.[0]?.Result?.[0]?.posters;
+        const posterURL = typeof posters === 'string' ? posters.split("|")[0] : null;
+
+        // 포스터 URL 로깅
+        console.log(`Poster URL for ${movie.movieNm}:`, posterURL);
+
+        return posterURL;
+      }));
+
+      const enhancedMovies = movies.map((movie, index) => ({
+        ...movie,
+        poster: moviePosters[index]
+      }));
+
+      setBoxOffice(enhancedMovies);
       setShowRange(date);
-    })
-    .catch(error => {
+    } catch (error) {
       console.error("Error fetching data:", error);
-    });
-  
+    }
   };
 
   return (
@@ -51,16 +77,7 @@ function App() {
         <button onClick={handleSearch}>Search</button>
       </div>
 
-      <ul>
-        {boxOffice.map(movie => (
-          <li key={movie.movieCd}>
-            <h3>{movie.movieNm}</h3>
-            <p>순위: {movie.rank}</p>
-            <p>개봉일: {movie.openDt}</p>
-            <p>누적관람객: {movie.audiAcc}명</p>
-          </li>
-        ))}
-      </ul>
+      <MovieList boxOfficeMovies={boxOffice} />
     </div>
   );
 }
