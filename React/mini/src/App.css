@@ -18,6 +18,17 @@ button:hover {
   background-color: #0056b3;
 }
 
+.header-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.search-box {
+  display: flex;
+  align-items: center;
+}
+
 ul {
   list-style-type: none;
   padding: 0;
