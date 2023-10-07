@@ -6,8 +6,8 @@ import MovieList from './MovieList';
 const cleanKMDbTitle = (title) => {
     title = title.replace(/\!HS|\!HE/g, ""); // !HS와 !HE 제거
     title = title.replace(/^\s+|\s+$/g, ""); // 앞뒤 공백 제거
-    title = title.replace(/ +/g, " "); // 여러 개의 공백을 하나로 줄임
-    return title;
+    title = title.replace(/ +/g, " "); // 여러 개의 공백을 하나로 줄임 
+    return title; 
 };
 
 function App() {
@@ -45,18 +45,25 @@ function App() {
                 const QUERY_URL = `https://api.koreafilm.or.kr/openapi-data2/wisenut/search_api/search_json2.jsp?collection=kmdb_new2&ServiceKey=${KOREAFILM_API_KEY}&detail=Y&query=${encodeURIComponent(movie.movieNm)}&releaseDts=${releaseDate}`;
 
                 const posterResponse = await axios.get(QUERY_URL);
+                // const matchingMovies = posterResponse.data?.Data?.[0]?.Result?.filter(resultMovie => {
+                //     const isTitleMatch = cleanKMDbTitle(resultMovie.title) === cleanKMDbTitle(movie.movieNm);
+                //     const isYearMatch = resultMovie.prodYear === movie.openDt.substring(0, 4);
+                //     return isTitleMatch && isYearMatch;
+                // });
                 const matchingMovies = posterResponse.data?.Data?.[0]?.Result?.filter(resultMovie => {
                     const isTitleMatch = cleanKMDbTitle(resultMovie.title) === cleanKMDbTitle(movie.movieNm);
-                    const isYearMatch = resultMovie.prodYear === movie.openDt.substring(0, 4);
+                    const isYearMatch = Math.abs(Number(resultMovie.prodYear) - Number(movie.openDt.substring(0, 4))) <= 1;
+                    
                     return isTitleMatch && isYearMatch;
                 });
 
                 if (matchingMovies && matchingMovies.length > 0) {
                     const posters = matchingMovies[0]?.posters;
                     const posterURL = typeof posters === 'string' ? posters.split("|")[0] : null;
+
                     return { ...movie, poster: posterURL };
                 }
-
+                
                 return { ...movie, poster: null };
             }));
 
