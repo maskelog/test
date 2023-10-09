@@ -45,11 +45,6 @@ function App() {
                 const QUERY_URL = `https://api.koreafilm.or.kr/openapi-data2/wisenut/search_api/search_json2.jsp?collection=kmdb_new2&ServiceKey=${KOREAFILM_API_KEY}&detail=Y&query=${encodeURIComponent(movie.movieNm)}&releaseDts=${releaseDate}`;
 
                 const posterResponse = await axios.get(QUERY_URL);
-                // const matchingMovies = posterResponse.data?.Data?.[0]?.Result?.filter(resultMovie => {
-                //     const isTitleMatch = cleanKMDbTitle(resultMovie.title) === cleanKMDbTitle(movie.movieNm);
-                //     const isYearMatch = resultMovie.prodYear === movie.openDt.substring(0, 4);
-                //     return isTitleMatch && isYearMatch;
-                // });
                 const matchingMovies = posterResponse.data?.Data?.[0]?.Result?.filter(resultMovie => {
                     const isTitleMatch = cleanKMDbTitle(resultMovie.title) === cleanKMDbTitle(movie.movieNm);
                     const isYearMatch = Math.abs(Number(resultMovie.prodYear) - Number(movie.openDt.substring(0, 4))) <= 1;
